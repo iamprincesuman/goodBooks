@@ -9,53 +9,53 @@ const PAGE_LIMIT = 15;
 
 // clear it, 
 module.exports.search = function(req, res){
-        let params = req.query;
-        let searchParams = {
-            query: {},
-            sort: { creationDate: -1 },
-            skip: null,
-            limit: PAGE_LIMIT,
-        };
+    let params = req.query;
+    let searchParams = {
+        query: {},
+        sort: { creationDate: -1 },
+        skip: null,
+        limit: PAGE_LIMIT,
+    };
 
-        if (params.query || typeof params.query === 'string') {
-            let query = JSON.parse(params.query);
-            searchParams.query = { $text: { $search: query['searchTerm'], $language: 'en' } };
-        }
+    if (params.query || typeof params.query === 'string') {
+        let query = JSON.parse(params.query);
+        searchParams.query = { $text: { $search: query['searchTerm'], $language: 'en' } };
+    }
 
-        if (params.sort) {
-            searchParams.sort = JSON.parse(params.sort);
-        }
+    if (params.sort) {
+        searchParams.sort = JSON.parse(params.sort);
+    }
 
-        if (params.skip) {
-            searchParams.skip = JSON.parse(params.skip);
-        }
+    if (params.skip) {
+        searchParams.skip = JSON.parse(params.skip);
+    }
 
-        if (params.limit) {
-            searchParams.limit = JSON.parse(params.limit);
-        }
+    if (params.limit) {
+        searchParams.limit = JSON.parse(params.limit);
+    }
 
-        BOOK
-            .find(searchParams.query)
-            .count()
-            .then((count) => {
-                BOOK
-                    .find(searchParams.query)
-                    .sort(searchParams.sort)
-                    .skip(searchParams.skip)
-                    .limit(searchParams.limit)
-                    .then((result) => {
-                        return res.status(200).json({
-                            message: '',
-                            data: result,
-                            query: searchParams,
-                            itemsCount: count
-                        });
-                    })
-                    .catch(() => {
-                        return res.status(400).json({
-                            message: 'Bad Request!'
-                        });
+    BOOK
+        .find(searchParams.query)
+        .count()
+        .then((count) => {
+            BOOK
+                .find(searchParams.query)
+                .sort(searchParams.sort)
+                .skip(searchParams.skip)
+                .limit(searchParams.limit)
+                .then((result) => {
+                    return res.status(200).json({
+                        message: '',
+                        data: result,
+                        query: searchParams,
+                        itemsCount: count
                     });
+                })
+                .catch(() => {
+                    return res.status(400).json({
+                        message: 'Bad Request!'
+                    });
+                });
             });
 }
 
