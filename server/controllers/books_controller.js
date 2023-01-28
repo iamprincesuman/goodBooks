@@ -1,4 +1,4 @@
-const validator = require('validator');
+const VALIDATOR = require('validator');
 const BOOK = require('../models/Book');
 const USER = require('../models/User');
 const CART = require('../models/Cart');
@@ -296,6 +296,26 @@ function validateBookForm(payload) {
     if (!payload || isNaN(Number(payload.price)) || Number(payload.price) < 0 || payload.pagesCount === '') {
         isFormValid = false;
         errors.price = 'Please provide book price.';
+    }
+
+    return {
+        success: isFormValid,
+        errors
+    };
+}
+
+function validateRatingForm(payload) {
+    let errors = {};
+    let isFormValid = true;
+
+    if (!payload || 
+        isNaN(Number(payload.rating)) || 
+        !VALIDATOR.isInt(payload.rating.toString()) || 
+        Number(payload.rating) < 1 || 
+        Number(payload.rating) > 5
+    ) {
+        isFormValid = false;
+        errors.price = 'Rating must be a integer number between 1 and 5.';
     }
 
     return {
