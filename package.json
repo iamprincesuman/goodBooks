@@ -1,0 +1,30 @@
+{
+  "name": "goodbooks",
+  "version": "1.0.0",
+  "description": "an Online book-store to buy, sell and manage all the books",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrinceSuman7/goodBooks.git"
+  },
+  "author": "Prince Suman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PrinceSuman7/goodBooks/issues"
+  },
+  "homepage": "https://github.com/PrinceSuman7/goodBooks#readme",
+  "dependencies": {
+    "connect-mongo": "^4.6.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.9.0",
+    "nodemon": "^2.0.20",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
+  }
+}
