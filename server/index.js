@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.port || 3000;
+const DB = require('./config/mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -18,8 +19,8 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(passport.initialize());
-// PASSPORT.use('local-register', REGISTER_STRATEGY);
-// PASSPORT.use('local-login', LOGIN_STRATEGY);
+passport.use('local-register', passportLocal.localRegister);
+passport.use('local-login', passportLocal.localLogin);
 app.use('/', require('./routes'));
 
 app.listen(port, function(err){

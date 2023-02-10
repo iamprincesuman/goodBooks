@@ -6,7 +6,7 @@ const userController = require('../controllers/users_controller');
 const cartController = require('../controllers/cart_controller');
 const bookController = require('../controllers/books_controller');
 const commentsController = require('../controllers/comments_controller');
-const errorsController = require('../controllers/errors_controller')
+const errorsController = require('../controllers/errors_controller');
 
 module.exports.init = async function(req, res){
     let role = await Role.findOne({name : 'Admin'});
