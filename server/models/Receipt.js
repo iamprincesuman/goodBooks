@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const receipt_schema = mongoose.Schema({
     user: { 
-        type: OBJECT_ID, 
+        type: mongoose.Schema.Types.ObjectId, 
         ref: 'User' 
     },
     productsInfo: [],

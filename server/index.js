@@ -13,8 +13,6 @@ const path = require('path');
 const db = require('../server/config/mongoose');
 const MongoStore = require('connect-mongo');
 
-db.connect();
-
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.use(cors());
@@ -23,7 +21,7 @@ passport.use('local-register', passportLocal.localRegister);
 passport.use('local-login', passportLocal.localLogin);
 app.use('/', require('./routes'));
 
-app.listen(port, function(err){
+app.listen(port, function(error){
     if(error){
         console.log('Error', error);
     }

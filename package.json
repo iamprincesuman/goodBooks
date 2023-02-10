@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/PrinceSuman7/goodBooks#readme",
   "dependencies": {
+    "body-parser": "^1.20.1",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -26,6 +27,7 @@
     "mongoose": "^6.9.0",
     "nodemon": "^2.0.20",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "validator": "^13.9.0"
   }
 }
