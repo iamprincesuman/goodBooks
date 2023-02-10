@@ -81,6 +81,7 @@ function validateAvatarForm(payload) {
 
 module.exports.register = function(req, res){
     let validationResult = validateRegisterForm(req.body);
+    
     if(!validationResult.success){
         return res.status(400).json({
             message: 'Register form validation failed!',
@@ -104,6 +105,7 @@ module.exports.register = function(req, res){
 }
 
 module.exports.login = function(req, res){
+
     let validationResult = validateLoginForm(req.body);
 
     if (!validationResult.success) {
@@ -148,6 +150,7 @@ module.exports.getProfile = function(req, res){
             message : '',
             data : userToSend
         });
+
     } catch(err) {
         console.log(err);
         return res.status(400).json({
@@ -159,6 +162,7 @@ module.exports.getProfile = function(req, res){
 module.exports.getPurchaseHistory = function(req, res){
     let userid = req.user.id;
     let receipts = Receipt.find({user : userId}).sort({creationDate : -1 });
+
     return res.status(200).json({
         message : '',
         data : receipts
@@ -210,6 +214,7 @@ module.exports.blockComments = function(req, res){
     
         user.isCommentsBlocked = true;
         user.save();
+
         res.status(200).json({
             message: `User ${user.username} blocked from posting comments!`
         });
@@ -226,19 +231,22 @@ module.exports.unblockComments = function(req, res){
     try {
         let userId = req.params.userId;
         let user = User.findById(userId);
+
         if(!user){
             return res.status(400).json({
                 message : `User ${user.username} not found in our database`
             });
         }
+
         user.isCommentsBlocked = false;
         user.save();
 
         res.status(200).json({
             message: `User ${user.username} can now post comments!`
         });
+
     } catch (error) {
-        console.log(err);
+        console.log(error);
         return res.status(400).json({
             message: 'Something went wrong, please try again.'
         });   

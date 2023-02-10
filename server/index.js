@@ -14,6 +14,12 @@ const MongoStore = require('connect-mongo');
 
 db.connect();
 
+app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.json());
+app.use(cors());
+app.use(passport.initialize());
+// PASSPORT.use('local-register', REGISTER_STRATEGY);
+// PASSPORT.use('local-login', LOGIN_STRATEGY);
 app.use('/', require('./routes'));
 
 app.listen(port, function(err){
