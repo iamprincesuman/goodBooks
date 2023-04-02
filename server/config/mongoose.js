@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
 mongoose.connect('mongodb://localhost/goodBooks_development');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Error in connecting to MongoDB'));

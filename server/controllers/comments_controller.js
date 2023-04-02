@@ -68,7 +68,7 @@ module.exports.add = async function(req, res){
         let userId = req.user.id;
         let comment = req.body.content;
 
-        let validationResult = await validateCommentForm(req.body);
+        let validationResult = validateCommentForm(req.body);
 
         if (!validationResult.success) {
             return res.status(400).json({
@@ -78,7 +78,7 @@ module.exports.add = async function(req, res){
         }
 
         let user = await USER.findById(userId);
-
+        
         if (!user || user.isCommentsBlocked) {
             return res.status(401).json({
                 message: 'Sorry, but you\'re not allowed to comment on books'
@@ -86,15 +86,15 @@ module.exports.add = async function(req, res){
         }
 
         let book = await BOOK.findById(bookId);
-
+        
         if (!book) {
             return res.status(400).json({
                 message: 'There is no book with the given id in our database.'
             });
         }
-
-        let newComment = await COMMENT.create({comment : comment});
-
+        
+        let newComment = await COMMENT.create({content : comment});
+        
         book.comments.push(newComment._id);
         newComment.book = book._id;                    
         newComment.user = userId;
@@ -111,7 +111,6 @@ module.exports.add = async function(req, res){
         });
 
     } catch (error) {
-        console.log(err);
         return res.status(400).json({
             message: 'Something went wrong, please try again.'
         });
@@ -141,7 +140,8 @@ module.exports.edit = async function(req, res){
             });
         }
 
-        let comment = await COMMENT.findById(commentId).populate({ path: 'user', select: 'username avatar' });
+        let comment = await COMMENT.findById(commentId)
+                                   .populate({ path: 'user', select: 'username avatar' });
 
         if (!comment) {
             return res.status(400).json({

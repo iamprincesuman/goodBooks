@@ -138,7 +138,7 @@ module.exports.checkout = async function(req, res){
             totalPrice: totalPrice
         });
         // why this update error
-        await USER.update({_id : userId}, {
+        await USER.updateOne({_id : userId}, {
             $push : {
                 receipts: receipt._id
             }

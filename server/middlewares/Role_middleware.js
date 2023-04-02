@@ -32,8 +32,9 @@ module.exports.init = async function(req, res){
         user.save();
     }
 
-    role = await Role.findOne({name : 'User'});
-    if(!role){
+    let role1 = await Role.findOne({name : 'User'});
+
+    if(!role1){
         let newRole = await Role.create({ name : 'User'});
         let salt = await Encryption.generateSalt();
         let passwordHash = await Encryption.generateHashedPassword(salt, '123');
@@ -50,5 +51,5 @@ module.exports.init = async function(req, res){
         let cart = await Cart.create({ user : nu._id});
         nu.cart = cart._id;
         nu.save();
-    };
+    }
 }

@@ -39,7 +39,7 @@ const book_schema = mongoose.Schema({
     },
     creationDate : {
         type : mongoose.Schema.Types.Date,
-        default : Date.now()
+        default : Date.now
     },
     currentRating : {
         type : mongoose.Schema.Types.Number,

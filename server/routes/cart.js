@@ -7,6 +7,6 @@ const booksController = require('../controllers/books_controller');
 const commentsController = require('../controllers/comments_controller');
 const errorsController = require('../controllers/errors_controller');
 
-route.get('/cart/getSize', auth.isAuth, cartController.getCartSize);
+route.get('/getSize', auth.isAuth, cartController.getCartSize);
 
 module.exports = route;

@@ -27,7 +27,7 @@ function validateRegisterForm(payload){
         errors.name = 'Please provide your name.';
     }
 
-    if (payload.avatar.trim().length !== 0) {
+    if (payload.avatar &&  payload.avatar.trim().length !== 0) {
         if (!validator.isURL(payload.avatar)) {
             isFormValid = false;
             errors.avatar = 'Please provide a valid link to your avatar image or leave the field empty.';
@@ -79,60 +79,97 @@ function validateAvatarForm(payload) {
     };
 }
 
-module.exports.register = function(req, res){
-    let validationResult = validateRegisterForm(req.body);
-    
-    if(!validationResult.success){
-        return res.status(400).json({
-            message: 'Register form validation failed!',
-            errors: validationResult.errors
-        })
-    }
-    // local register ?? 
-    passport.authenticate('local-register', (err, token) => {
-        if (err || !token) {
+module.exports = {
+    register: (req, res) => {
+        let validationResult = validateRegisterForm(req.body);
+        if(!validationResult.success){
             return res.status(400).json({
-                message: 'Registration failed!',
-                errors: { 'taken': 'Username or email already taken' }
-            });
+                message: 'Register form validation failed!',
+                errors: validationResult.errors
+            })
         }
 
-        return res.status(200).json({
-            message: 'Registration successful!',
-            data: token
-        });
-    })(req, res);
-}
+        passport.authenticate('local-register', (err, token) => {
+            if (err || !token) {
+                console.log(token);
+                return res.status(400).json({
+                    message: 'Registration failed!',
+                    errors: { 'taken': 'Username or email already taken' }
+                });
+            }
 
-module.exports.login = function(req, res){
-
-    let validationResult = validateLoginForm(req.body);
-
-    if (!validationResult.success) {
-        return res.status(400).json({
-            message: 'Login form validation failed!',
-            errors: validationResult.errors
-        });
+            return res.status(200).json({
+                message: 'Registration successful!',
+                data: token
+            });
+        })(req, res);
     }
+}
+/*
+    module.exports.register = function(req, res){
+            let validationResult = validateRegisterForm(req.body);
+            // console.log(validationResult);
+            if(!validationResult.success){
+                return res.status(400).json({
+                    message: 'Register form validation failed!',
+                    errors: validationResult.errors
+                })
+            }
 
-    passport.authenticate('local-login', (err, token) => {
+            passport.authenticate('local-register', (err, token) => {
+                if (err || !token) {
+                    return res.status(400).json({
+                        message: 'Registration failed!',
+                        errors: { 'taken': 'Username or email already taken' }
+                    });
+                }
+
+                return res.status(200).json({
+                    message: 'Registration successful!',
+                    data: token
+                });
+            })(req, res);
+    }
+*/
+module.exports.login = function(req, res){
+    try {
+
+        let validationResult = validateLoginForm(req.body);
+
+        if (!validationResult.success) {
+            return res.status(400).json({
+                message: 'Login form validation failed!',
+                errors: validationResult.errors
+            });
+        }
+    
+        passport.authenticate('local-login', (err, token) => {
+            if (err || !token) {
+                return res.status(400).json({
+                    message: 'Invalid Credentials!'
+                });
+            }
+            console.log(token);
+
+            return res.status(200).json({
+                message: 'Login successful!',
+                data: token
+            });
+
+        })(req, res);
+    } catch(error){
         if (err || !token) {
             return res.status(400).json({
                 message: 'Invalid Credentials!'
             });
         }
-
-        return res.status(200).json({
-            message: 'Login successful!',
-            data: token
-        });
-    })(req, res);
+    }
 }
 
-module.exports.getProfile = function(req, res){
+module.exports.getProfile = async function(req, res){
     try { 
         let username = req.params.username;
-        let user = username.findOne({username : username}).populate('favoriteBooks');
+        let user = await User.findOne({username : username}).populate('favoriteBooks');
         if(!user){
             return res.status(400).json({
                 message : `User ${username} not found in our database`
@@ -159,9 +196,9 @@ module.exports.getProfile = function(req, res){
     }
 }
 
-module.exports.getPurchaseHistory = function(req, res){
-    let userid = req.user.id;
-    let receipts = Receipt.find({user : userId}).sort({creationDate : -1 });
+module.exports.getPurchaseHistory = async function(req, res){
+    let userId = req.user.id;
+    let receipts = await Receipt.find({user : userId}).sort({creationDate : -1 });
 
     return res.status(200).json({
         message : '',
@@ -191,8 +228,11 @@ module.exports.changeAvatar = function(req, res){
             });
         }
         // why update not working ??
-        User.update({ _id : userToChange}, {$set: { avatar: newAvatar }});
-
+        User.updateOne({ _id : userToChange}, {$set: { avatar: newAvatar }});
+        
+        return res.status(200).json({
+            message: 'Avatar changed successfully!'
+        });
     } catch(error) {
         console.log(err);
         return res.status(400).json({
@@ -201,10 +241,10 @@ module.exports.changeAvatar = function(req, res){
     }
 }
 
-module.exports.blockComments = function(req, res){
+module.exports.blockComments = async function(req, res){
     try {
         let userId = req.params.userId;
-        let user = User.findById(userId);
+        let user = await User.findById(userId);
     
         if(!user) {
             return res.status(400).json({
@@ -227,10 +267,10 @@ module.exports.blockComments = function(req, res){
     }
 }
 
-module.exports.unblockComments = function(req, res){
+module.exports.unblockComments = async function(req, res){
     try {
         let userId = req.params.userId;
-        let user = User.findById(userId);
+        let user = await User.findById(userId);
 
         if(!user){
             return res.status(400).json({

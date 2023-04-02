@@ -8,18 +8,17 @@ const booksController = require('../controllers/books_controller');
 const commentsController = require('../controllers/comments_controller');
 const errorsController = require('../controllers/errors_controller');
 
-route.get('/profile/:username', auth.isAuth, userController.getProfile); // middleware to add
-route.get('/purchaseHistory', auth.isAuth, userController.getPurchaseHistory); // middleware to add
-route.get('/changeAvatar', auth.isAuth, userController.changeAvatar); // middleware to add
-route.get('/cart/add/:bookId', auth.isAuth, cartController.addToCart); // middleware to add
-route.get('/cart', auth.isAuth, cartController.getCart); // middleware to add
+route.post('/register', userController.register); 
+route.post('/login', userController.login); 
+route.get('/profile/:username', auth.isAuth, userController.getProfile); 
+route.get('/purchaseHistory', auth.isAuth, userController.getPurchaseHistory); 
+route.post('/changeAvatar', auth.isAuth, userController.changeAvatar); 
+route.post('/blockComments/:userId', auth.isInRole('Admin'), userController.blockComments);
+route.post('/unblockComments/:userId',auth.isInRole('Admin'), userController.unblockComments); 
 
-route.post('/user/cart/checkout', auth.isAuth, cartController.checkout); // middleware to add
-route.post('/register', userController.register); // middleware to add
-route.post('/login', userController.login); // middleware to add
-route.post('/blockComments/:userId', auth.isInRole('Admin'), userController.blockComments); // middleware to add
-route.post('/unblockComments/:userId', auth.isInRole('Admin'), userController.unblockComments); // middleware to add
-
-route.delete('/user/cart/delete/:bookId', auth.isAuth, cartController.removeFromCart); // middleware to add
+route.get('/cart', auth.isAuth, cartController.getCart); 
+route.post('/cart/add/:bookId', auth.isAuth, cartController.addToCart); 
+route.delete('/cart/delete/:bookId', auth.isAuth, cartController.removeFromCart); 
+route.post('/cart/checkout', auth.isAuth, cartController.checkout); 
 
 module.exports = route;

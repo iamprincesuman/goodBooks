@@ -59,6 +59,7 @@ module.exports.search = function(req, res){
             });
 }
 
+// will find the book using the bookId provided with each request.
 module.exports.getSingle = async function(req, res){
     try {
         let bookId = req.params.bookId;
@@ -82,8 +83,8 @@ module.exports.getSingle = async function(req, res){
 
 module.exports.add = async function(req, res){
     try {
-        let book = await req.body;
-        let validationResult = await validateBookForm(book);
+        let book =  req.body;
+        let validationResult =  validateBookForm(book);
         if(!validationResult.success){
             return res.status(400).json({
                 message: 'Book form validation failed!',
@@ -107,10 +108,10 @@ module.exports.add = async function(req, res){
 
 module.exports.edit = async function(req, res){
     try {
-        let bookId = await req.params.bookId;
-        let editedBook = await req.body;
-        let validateResult = await validateBookForm(editedBook);
-        if(!validationResult.success) {
+        let bookId =  req.params.bookId;
+        let editedBook =  req.body;
+        let validateResult = validateBookForm(editedBook);
+        if(!validateResult.success) {
             return res.status(400).json({
                 message : 'form validation failed for book',
                 errors : validateResult.errors
@@ -122,6 +123,7 @@ module.exports.edit = async function(req, res){
                 message : 'no book found in DB'
             })
         }
+
         book.title = editedBook.title;
         book.author = editedBook.author;
         book.genre = editedBook.genre;
@@ -148,7 +150,7 @@ module.exports.edit = async function(req, res){
 
 module.exports.delete = async function(req, res){
     try {
-        let bookId = await req.params.bookId;
+        let bookId =  req.params.bookId;
         let deletedBook = await BOOK.findByIdAndDelete(bookId);
         if(!deletedBook) {
             return res.status(200).json({
@@ -169,11 +171,11 @@ module.exports.delete = async function(req, res){
 
 module.exports.rate = async function(req, res){
     try {
-        let bookId = await req.params.bookId;
-        let rating = await req.body.rating;
-        let userId = await req.body.id;
+        let bookId =  req.params.bookId;
+        let rating =  req.body.rating;
+        let userId =  req.body.id;
 
-        let validationResult = await validateRatingForm(req.body);
+        let validationResult =  validateRatingForm(req.body);
 
         if(!validationResult.success) {
             return res.status(400).json({
@@ -218,7 +220,7 @@ module.exports.rate = async function(req, res){
 
 module.exports.addToFavorites = async function(req, res){
     try {
-        let bookId = await req.params.bookId;
+        let bookId =  req.params.bookId;
         let book = await BOOK.findById(bookId);
 
         if(!book) {
